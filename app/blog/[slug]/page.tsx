@@ -130,7 +130,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
             {/* Tags */}
             {article.tags && article.tags.length > 0 && (
-              <div className="mt-10 flex flex-wrap gap-2 pt-6 border-t border-white/5">
+              <div className="mt-10 flex flex-wrap gap-2 pt-6 border-t border-[var(--color-border)]">
                 {article.tags.map(tag => (
                   <span key={tag} className="rounded-md bg-surface-soft px-3 py-1.5 text-sm font-medium text-muted-foreground border border-border">
                     {tag}

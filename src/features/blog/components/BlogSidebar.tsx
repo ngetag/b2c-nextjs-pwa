@@ -25,7 +25,7 @@ export function BlogSidebar({ articles, type = "latest" }: BlogSidebarProps) {
   return (
     <div className="space-y-6">
       {/* Latest / Other Articles */}
-      <div className="rounded-2xl border border-white/5 bg-surface-soft p-5 md:p-6">
+      <div className="rounded-2xl border border-[var(--color-border)] bg-surface-soft p-5 md:p-6">
         <h3 className="mb-6 font-display text-xl font-bold text-foreground">
           {type === "latest" ? "Baru Aja Rilis" : "Artikel Lainnya"}
         </h3>
@@ -59,7 +59,7 @@ export function BlogSidebar({ articles, type = "latest" }: BlogSidebarProps) {
       </div>
 
       {/* Categories */}
-      <div className={type === "latest" ? "rounded-2xl border border-white/5 bg-surface-soft p-5 md:p-6" : "pt-4"}>
+      <div className={type === "latest" ? "rounded-2xl border border-[var(--color-border)] bg-surface-soft p-5 md:p-6" : "pt-4"}>
         <h3 className={`font-display font-bold text-foreground ${type === "latest" ? "mb-5 text-lg" : "mb-4 text-xl"}`}>
           {type === "latest" ? "Vibe Terfavorit" : "Kategori"}
         </h3>
@@ -80,7 +80,7 @@ export function BlogSidebar({ articles, type = "latest" }: BlogSidebarProps) {
               <Link 
                 key={category.name} 
                 href={`/blog?category=${encodeURIComponent(category.name)}`}
-                className="rounded-full bg-surface-soft px-4 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-white/10 hover:text-foreground border border-border"
+                className="rounded-full bg-surface-soft px-4 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-[var(--glass-bg-subtle)] hover:text-foreground border border-border"
               >
                 {category.name}
               </Link>

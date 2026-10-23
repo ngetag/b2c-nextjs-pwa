@@ -114,7 +114,7 @@ function DiscoveryResultCard({
   return (
     <Link
       href={href}
-      className="group relative flex min-h-28 min-w-52 snap-start flex-col rounded-3xl border border-white/10 bg-white/5 p-3 backdrop-blur-md shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07] md:min-w-0"
+      className="group relative flex min-h-28 min-w-52 snap-start flex-col rounded-3xl glass p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07] md:min-w-0"
     >
       <div className="flex items-center gap-2 text-xs font-medium text-[var(--color-muted-foreground)]">
         {icon}
@@ -742,7 +742,7 @@ export function SearchView({ tags }: SearchViewProps) {
         </header>
 
         <form onSubmit={handleSubmit} className="flex max-w-full gap-2" role="search">
-          <div className="flex h-12 min-w-0 flex-1 items-center overflow-hidden rounded-full border border-white/8 bg-slate-900/40 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-md">
+          <div className="flex h-12 min-w-0 flex-1 items-center overflow-hidden rounded-full glass border">
             <Search
               className="ml-4 h-4 w-4 shrink-0 text-[var(--color-muted-foreground)]"
               aria-hidden
@@ -756,7 +756,7 @@ export function SearchView({ tags }: SearchViewProps) {
               aria-label="Cari spot, event, komunitas, tag, kategori, dan minat"
             />
             <span
-              className="h-7 w-px shrink-0 bg-white/10"
+              className="h-7 w-px shrink-0 bg-[var(--glass-bg-subtle)]"
               aria-hidden
             />
             <Link

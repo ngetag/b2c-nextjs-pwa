@@ -11,7 +11,7 @@ interface BlogCardProps {
 export function BlogCard({ article, featured = false }: BlogCardProps) {
   if (featured) {
     return (
-      <article className="group overflow-hidden rounded-3xl bg-[#1c1c1c] shadow-xl transition-all duration-300 hover:border-primary/60 border border-transparent">
+      <article className="glass group overflow-hidden rounded-3xl shadow-xl transition-all duration-300 hover:border-primary/60 border border-transparent">
         <Link href={`/blog/${article.slug}`} className="flex flex-col md:flex-row">
           <div className="relative aspect-[16/9] lg:aspect-[2/1] w-full md:w-[50%] lg:w-[60%] shrink-0 overflow-hidden">
             <Image

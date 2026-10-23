@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { demoUser } from "@/data/fixtures/users";
 import { STORAGE_KEYS } from "@/lib/constants";
+import { trackEvent } from "@/lib/telemetry/client";
 import {
   type Bookmark,
   type BookmarkTargetType,
@@ -53,6 +54,11 @@ export const useBookmarkStore = create<BookmarkState>()(
             body: JSON.stringify({ userId, targetType: type, targetId }),
           }).catch(() => null);
         }
+        trackEvent(existing ? "bookmark_remove" : "bookmark_add", {
+          targetType: type,
+          targetId,
+        });
+
         if (existing) {
           const rest = { ...get().items };
           delete rest[key];

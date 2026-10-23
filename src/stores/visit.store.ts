@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { STORAGE_KEYS } from "@/lib/constants";
 import { buildSpotVisitId, type SpotVisit } from "@/types/visit";
+import { trackEvent } from "@/lib/telemetry/client";
 
 interface MarkSpotVisitInput {
   userId: string;
@@ -27,6 +28,12 @@ export const useVisitStore = create<VisitState>()(
         const id = buildSpotVisitId(userId, spotId);
         const now = new Date().toISOString();
         const current = get().items[id];
+
+        trackEvent("qr_scan", {
+          targetType: "spot",
+          targetId: spotId,
+          tagIds,
+        });
 
         if (typeof window !== "undefined") {
           void fetch("/api/engagements/visits", {

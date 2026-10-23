@@ -2,6 +2,9 @@
 
 Dokumen ini menjelaskan arsitektur database schema (**Drizzle ORM**), runtime validation schema (**Zod**), serta **REST API Route Handlers** (`/api/*`) untuk aplikasi web NgeTag (B2C Customer App & B2B Owner Dashboard Handoff).
 
+> **Dokumentasi API interaktif:** Swagger UI tersedia di [`/api-docs`](../app/api-docs/page.tsx) dan spesifikasi mentah (OpenAPI 3.1) di `GET /api/openapi`.
+> Untuk alur autentikasi (OAuth + JWT claims), telemetri asinkron, recommendation engine, dan tema, lihat [`auth-telemetry-and-docs.md`](./auth-telemetry-and-docs.md).
+
 ---
 
 ## 1. Database Schema (`src/db/`)

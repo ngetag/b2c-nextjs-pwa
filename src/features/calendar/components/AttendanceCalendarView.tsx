@@ -111,7 +111,7 @@ export function AttendanceCalendarView({ events }: AttendanceCalendarViewProps) 
   return (
     <div className="space-y-5">
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.5fr)_minmax(300px,0.8fr)]">
-        <section className="rounded-3xl border border-white/8 bg-slate-900/40 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.25)] backdrop-blur-md md:p-5">
+        <section className="glass rounded-3xl border p-4 md:p-5">
           <div className="mb-5 flex items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Agenda kamu</p>
@@ -149,7 +149,7 @@ export function AttendanceCalendarView({ events }: AttendanceCalendarViewProps) 
           </div>
         </section>
 
-        <section className="rounded-3xl border border-white/8 bg-slate-900/40 p-5 shadow-[0_8px_32px_rgba(0,0,0,0.25)] backdrop-blur-md">
+        <section className="glass rounded-3xl border p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent-music">

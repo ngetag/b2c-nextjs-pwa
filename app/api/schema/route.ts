@@ -1,5 +1,51 @@
 import { jsonOk } from "@/lib/api-response";
 
+/**
+ * GET /api/schema — Manifest schema Drizzle, enum, dan kontrak
+ *
+ * Dokumen referensi tabel Drizzle, enum PostgreSQL, lokasi file schema/relations, dan
+ * kontrak bersama.
+ *
+ * Auth: Publik.
+ * Sumber kontrak: src/server/openapi/registry.ts#getSchemaManifest.
+ *
+ * @openapi
+ *  /api/schema:
+ *    get:
+ *      tags:
+ *        - System
+ *      operationId: getSchemaManifest
+ *      summary: "Manifest schema Drizzle, enum, dan kontrak"
+ *      description: "Dokumen referensi tabel Drizzle, enum PostgreSQL, lokasi file schema/relations, dan kontrak bersama."
+ *      responses:
+ *        200:
+ *          description: Berhasil.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/SchemaManifest"
+ *        400:
+ *          description: "Payload/parameter tidak valid (`VALIDATION_ERROR`)."
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/Error"
+ *        404:
+ *          description: "Entitas tidak ditemukan (`NOT_FOUND`)."
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/Error"
+ *        500:
+ *          description: "Kesalahan server (`INTERNAL_ERROR`)."
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/Error"
+ *      security: []
+ *      x-auth-mode: none
+ *      x-source-file: app/api/schema/route.ts
+ */
 export async function GET() {
   return jsonOk({
     orm: "drizzle-orm",

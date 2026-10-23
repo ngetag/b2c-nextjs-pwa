@@ -1,6 +1,52 @@
 import { jsonOk } from "@/lib/api-response";
 import { getStore } from "@/server/store";
 
+/**
+ * GET /api/health — Status server & jumlah record
+ *
+ * Mengembalikan status server, versi, jumlah record per entitas, daftar endpoint, dan
+ * status integrasi database (pgvector/PostGIS).
+ *
+ * Auth: Publik.
+ * Sumber kontrak: src/server/openapi/registry.ts#getHealth.
+ *
+ * @openapi
+ *  /api/health:
+ *    get:
+ *      tags:
+ *        - System
+ *      operationId: getHealth
+ *      summary: "Status server & jumlah record"
+ *      description: "Mengembalikan status server, versi, jumlah record per entitas, daftar endpoint, dan status integrasi database (pgvector/PostGIS)."
+ *      responses:
+ *        200:
+ *          description: Berhasil.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/HealthResponse"
+ *        400:
+ *          description: "Payload/parameter tidak valid (`VALIDATION_ERROR`)."
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/Error"
+ *        404:
+ *          description: "Entitas tidak ditemukan (`NOT_FOUND`)."
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/Error"
+ *        500:
+ *          description: "Kesalahan server (`INTERNAL_ERROR`)."
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/Error"
+ *      security: []
+ *      x-auth-mode: none
+ *      x-source-file: app/api/health/route.ts
+ */
 export async function GET() {
   const store = getStore();
   return jsonOk({
@@ -25,9 +71,30 @@ export async function GET() {
       gallery: store.gallery.length,
       qrCodes: store.qrCodes.length,
     },
+    docs: {
+      swaggerUi: "/api-docs",
+      openapi: "/api/openapi",
+      jsdocContract: "src/server/openapi/registry.ts",
+    },
     endpoints: [
       "/api/health",
       "/api/schema",
+      "/api/openapi",
+      "/api/auth/signup",
+      "/api/auth/login",
+      "/api/auth/refresh",
+      "/api/auth/logout",
+      "/api/auth/session",
+      "/api/auth/profile",
+      "/api/auth/sessions",
+      "/api/auth/sessions/[id]",
+      "/api/auth/oauth/[provider]",
+      "/api/auth/oauth/[provider]/callback",
+      "/api/telemetry/events",
+      "/api/telemetry/profile",
+      "/api/telemetry/summary",
+      "/api/telemetry/flush",
+      "/api/telemetry/reindex",
       "/api/spots",
       "/api/spots/[id]",
       "/api/spots/[id]/reviews",
@@ -65,6 +132,8 @@ export async function GET() {
       "/api/notifications",
       "/api/search",
       "/api/recommendations",
+      "/api/recommendations/for-you",
+      "/api/recommendations/similar",
       "/api/owners",
       "/api/owners/[id]",
       "/api/gallery",

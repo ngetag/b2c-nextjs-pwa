@@ -10,6 +10,128 @@ import {
   storeSearchSpots,
 } from "@/server/store";
 
+/**
+ * GET /api/search — Pencarian terpadu
+ *
+ * Pencarian lintas spot, event, komunitas, tag, kategori komunitas, dan interest dalam
+ * satu response.
+ *
+ * Auth: Publik.
+ * Sumber kontrak: src/server/openapi/registry.ts#search.
+ *
+ * @openapi
+ *  /api/search:
+ *    get:
+ *      tags:
+ *        - Search
+ *      operationId: search
+ *      summary: "Pencarian terpadu"
+ *      description: "Pencarian lintas spot, event, komunitas, tag, kategori komunitas, dan interest dalam satu response."
+ *      parameters:
+ *        -
+ *          name: q
+ *          in: query
+ *          required: false
+ *          description: "Kata kunci."
+ *          schema:
+ *            type: string
+ *        -
+ *          name: type
+ *          in: query
+ *          required: false
+ *          description: "Batasi tipe hasil."
+ *          schema:
+ *            type: string
+ *            enum:
+ *              - spot
+ *              - event
+ *              - all
+ *        -
+ *          name: tagSlugs
+ *          in: query
+ *          required: false
+ *          description: "Filter tag. CSV / diulang."
+ *          schema:
+ *            type: string
+ *          style: form
+ *          explode: true
+ *        -
+ *          name: city
+ *          in: query
+ *          required: false
+ *          description: "Filter kota."
+ *          schema:
+ *            type: string
+ *        -
+ *          name: sort
+ *          in: query
+ *          required: false
+ *          description: Urutan.
+ *          schema:
+ *            type: string
+ *            enum:
+ *              - relevance
+ *              - newest
+ *              - distance
+ *        -
+ *          name: page
+ *          in: query
+ *          required: false
+ *          description: Halaman.
+ *          schema:
+ *            type: integer
+ *            default: 1
+ *        -
+ *          name: pageSize
+ *          in: query
+ *          required: false
+ *          description: "Jumlah per halaman."
+ *          schema:
+ *            type: integer
+ *            default: 24
+ *        -
+ *          name: lat
+ *          in: query
+ *          required: false
+ *          description: Latitude.
+ *          schema:
+ *            type: number
+ *        -
+ *          name: lng
+ *          in: query
+ *          required: false
+ *          description: Longitude.
+ *          schema:
+ *            type: number
+ *      responses:
+ *        200:
+ *          description: Berhasil.
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/SearchResponse"
+ *        400:
+ *          description: "Payload/parameter tidak valid (`VALIDATION_ERROR`)."
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/Error"
+ *        404:
+ *          description: "Entitas tidak ditemukan (`NOT_FOUND`)."
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/Error"
+ *        500:
+ *          description: "Kesalahan server (`INTERNAL_ERROR`)."
+ *          content:
+ *            application/json:
+ *              schema:
+ *                "$ref": "#/components/schemas/Error"
+ *      security: []
+ *      x-auth-mode: none
+ *      x-source-file: app/api/search/route.ts
+ */
 export async function GET(request: NextRequest) {
   try {
     const sp = request.nextUrl.searchParams;

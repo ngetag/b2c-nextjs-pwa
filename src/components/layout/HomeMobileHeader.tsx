@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { formatHomeLocation } from "@/lib/location";
 import { useCurrentLocationStore } from "@/stores/currentLocation.store";
 import { useCurrentUserStore } from "@/stores/currentUser.store";
@@ -41,7 +42,7 @@ export function HomeMobileHeader() {
           sizes="100vw"
           className="object-cover object-center opacity-100"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgb(13_14_21_/_0.16),rgb(13_14_21_/_0.58))]" />
+        <div className="hero-scrim absolute inset-0 bg-[linear-gradient(180deg,rgb(13_14_21_/_0.16),rgb(13_14_21_/_0.58))]" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--color-background)] via-[var(--color-background)]/70 via-[var(--color-background)]/35 to-transparent" />
       </div>
 
@@ -58,16 +59,19 @@ export function HomeMobileHeader() {
             <ChevronDown className="h-3.5 w-3.5 text-white/50" aria-hidden />
           </Link>
 
-          <Link
-            href="/notifications"
-            className="relative inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/8 text-[var(--color-foreground)] transition-colors duration-200 ease-out hover:text-[var(--color-secondary)]"
-            aria-label="Notifikasi"
-          >
-            <Bell className="h-4 w-4" aria-hidden />
-            {mounted && unreadCount > 0 && (
-              <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-accent-coffee" aria-label="Ada notifikasi baru" />
-            )}
-          </Link>
+          <div className="flex items-center gap-2">
+            <ThemeToggle className="h-8 w-8" />
+            <Link
+              href="/notifications"
+              className="relative inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-colors duration-200 ease-out hover:text-[var(--color-secondary)]"
+              aria-label="Notifikasi"
+            >
+              <Bell className="h-4 w-4" aria-hidden />
+              {mounted && unreadCount > 0 && (
+                <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-accent-coffee" aria-label="Ada notifikasi baru" />
+              )}
+            </Link>
+          </div>
         </div>
 
         {/* ── Greeting + headline ── */}

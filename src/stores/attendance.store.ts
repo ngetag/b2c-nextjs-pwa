@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { STORAGE_KEYS } from "@/lib/constants";
 import { buildAttendanceId, type EventAttendance } from "@/types/attendance";
+import { trackEvent } from "@/lib/telemetry/client";
 
 interface AttendanceState {
   items: Record<string, EventAttendance>;
@@ -28,6 +29,11 @@ export const useAttendanceStore = create<AttendanceState>()(
             body: JSON.stringify({ userId, eventId }),
           }).catch(() => null);
         }
+        trackEvent(existing ? "attendance_remove" : "attendance_add", {
+          targetType: "event",
+          targetId: eventId,
+        });
+
         if (existing) {
           const rest = { ...get().items };
           delete rest[eventId];

@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { STORAGE_KEYS } from "@/lib/constants";
 import type { Review } from "@/types/review";
+import { trackEvent } from "@/lib/telemetry/client";
 
 interface ReviewState {
   /** User-created reviews (in addition to fixture reviews). */
@@ -20,7 +21,15 @@ export const useReviewStore = create<ReviewState>()(
   persist(
     (set, get) => ({
       items: [],
-      add: (review) => set({ items: [review, ...get().items] }),
+      add: (review) => {
+        trackEvent("review_create", {
+          targetType: "spot",
+          targetId: review.spotId,
+          metadata: { reviewId: review.id },
+          tagIds: review.reviewTagIds ?? [],
+        });
+        set({ items: [review, ...get().items] });
+      },
       update: (id, patch) =>
         set({
           items: get().items.map((r) =>

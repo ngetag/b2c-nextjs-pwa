@@ -196,7 +196,7 @@ export function CommunitiesView({
             <Link
               key={category.id}
               href={routes.communitiesByCategory(category.id)}
-              className="relative flex flex-col rounded-3xl border border-white/10 bg-white/5 p-3 backdrop-blur-md shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]"
+              className="relative flex flex-col rounded-3xl glass p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]"
               style={{ "--category-accent": accent } as CSSProperties}
             >
               <div className="flex items-start gap-3">

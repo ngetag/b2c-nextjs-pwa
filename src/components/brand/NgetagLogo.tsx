@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 
-type NgetagLogoVariant = "default" | "dark" | "mono";
+type NgetagLogoVariant = "default" | "dark" | "mono" | "auto";
 type NgetagLogoLockup = "horizontal" | "icon";
 
 interface NgetagLogoProps {
@@ -24,6 +24,11 @@ const variantStyle: Record<NgetagLogoVariant, CSSProperties> = {
   mono: {
     "--logo-mark": "currentColor",
     "--logo-word": "currentColor",
+  } as CSSProperties,
+  /** Brand mark keeps its orange; the wordmark follows the active theme. */
+  auto: {
+    "--logo-mark": "#FF8A1F",
+    "--logo-word": "var(--color-foreground)",
   } as CSSProperties,
 };
 
