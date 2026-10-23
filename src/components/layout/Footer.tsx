@@ -7,7 +7,7 @@ import { APP_NAME, APP_TAGLINE } from "@/lib/constants";
  */
 export function Footer() {
   return (
-    <footer className="hidden border-t border-[var(--color-border)] bg-[var(--color-surface)] md:block">
+    <footer className="glass-subtle hidden border-t border-[var(--glass-border)] md:block">
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div className="space-y-2">
@@ -16,7 +16,7 @@ export function Footer() {
               className="inline-flex"
               aria-label="NgeTag beranda"
             >
-              <NgetagLogo variant="dark" />
+              <NgetagLogo variant="auto" />
             </Link>
             <p className="max-w-sm text-sm text-[var(--color-muted-foreground)]">
               {APP_TAGLINE}
@@ -52,6 +52,11 @@ export function Footer() {
               </h3>
               <ul className="space-y-1.5 text-[var(--color-muted-foreground)]">
                 <li>
+                  <Link href="/account" className="hover:text-[var(--color-foreground)]">
+                    Akun & sesi
+                  </Link>
+                </li>
+                <li>
                   <Link href="/profile" className="hover:text-[var(--color-foreground)]">
                     Profil
                   </Link>
@@ -69,7 +74,14 @@ export function Footer() {
               </h3>
               <ul className="space-y-1.5 text-[var(--color-muted-foreground)]">
                 <li>
-                  <span>Versi MVP</span>
+                  <Link href="/api-docs" className="hover:text-[var(--color-foreground)]">
+                    API Docs (Swagger)
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/theme" className="hover:text-[var(--color-foreground)]">
+                    Galeri tema
+                  </Link>
                 </li>
                 <li>
                   <span>Data demo</span>

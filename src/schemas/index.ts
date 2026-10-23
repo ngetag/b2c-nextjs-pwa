@@ -8,3 +8,5 @@ export * from "./community.schema";
 export * from "./user.schema";
 export * from "./engagement.schema";
 export * from "./content.schema";
+export * from "./auth.schema";
+export * from "./telemetry.schema";

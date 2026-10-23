@@ -23,18 +23,13 @@ export function HypeVideoCard({ item, isActive, isMuted, onToggleMute }: HypeVid
     if (!video) return;
 
     if (isActive) {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => setIsPlaying(true))
-          .catch((err) => {
-            console.log("Autoplay hindered or paused:", err);
-            setIsPlaying(false);
-          });
-      }
+      // Playback state is derived from the media events below, which keeps this
+      // effect free of state updates (and in sync with native controls).
+      void video.play().catch(() => {
+        /* Autoplay can be blocked until the user interacts. */
+      });
     } else {
       video.pause();
-      setIsPlaying(false);
     }
   }, [isActive]);
 
@@ -50,7 +45,9 @@ export function HypeVideoCard({ item, isActive, isMuted, onToggleMute }: HypeVid
     if (!video) return;
 
     if (video.paused) {
-      video.play().then(() => setIsPlaying(true)).catch(() => {});
+      void video.play().catch(() => {
+        /* Ignore: the play() rejection is surfaced by the video element. */
+      });
     } else {
       video.pause();
       setIsPlaying(false);
@@ -78,6 +75,8 @@ export function HypeVideoCard({ item, isActive, isMuted, onToggleMute }: HypeVid
         loop
         muted={isMuted}
         onTimeUpdate={handleTimeUpdate}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
         className="h-full w-full object-cover"
       />
 

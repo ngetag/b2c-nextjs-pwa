@@ -2,7 +2,7 @@ export function formatToIcalDate(isoString: string): string {
   try {
     const date = new Date(isoString);
     return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-  } catch (e) {
+  } catch {
     return isoString;
   }
 }
@@ -12,7 +12,8 @@ export interface CalendarEventData {
   startAt: string;
   endAt?: string;
   description?: string;
-  location?: string | any;
+  /** Venue name or a structured address (only `address`/`city` are used). */
+  location?: string | { address?: string; city?: string };
   venueName?: string;
 }
 

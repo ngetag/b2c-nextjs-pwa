@@ -39,7 +39,7 @@ export function ShareButton({ title, url }: ShareButtonProps) {
     <>
       <button 
         onClick={() => setIsOpen(true)}
-        className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background/50 text-foreground backdrop-blur-md transition-all hover:bg-background/80 hover:text-primary border border-white/10 shadow-lg"
+        className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background/50 text-foreground backdrop-blur-md transition-all hover:bg-background/80 hover:text-primary border border-[var(--glass-border)] shadow-lg"
         aria-label="Bagikan artikel"
       >
         <Share2 className="h-5 w-5" />
@@ -51,10 +51,10 @@ export function ShareButton({ title, url }: ShareButtonProps) {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
-          <div className="relative z-10 w-full max-w-sm rounded-2xl border border-white/10 bg-surface p-6 shadow-2xl">
+          <div className="relative z-10 w-full max-w-sm rounded-2xl border border-[var(--glass-border)] bg-surface p-6 shadow-2xl">
             <h3 className="mb-4 font-display text-xl font-bold text-foreground">Bagikan Artikel</h3>
             
-            <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-background/50 p-2">
+            <div className="flex items-center gap-3 rounded-xl border border-[var(--glass-border)] bg-background/50 p-2">
               <input 
                 type="text" 
                 value={url}
@@ -107,7 +107,7 @@ export function ShareButton({ title, url }: ShareButtonProps) {
             
             <button 
               onClick={() => setIsOpen(false)}
-              className="mt-6 w-full rounded-xl bg-surface-soft py-3 text-sm font-semibold text-foreground transition-colors hover:bg-white/10"
+              className="mt-6 w-full rounded-xl bg-surface-soft py-3 text-sm font-semibold text-foreground transition-colors hover:bg-[var(--glass-bg-subtle)]"
             >
               Tutup
             </button>

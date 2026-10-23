@@ -24,7 +24,7 @@ export function CommunityCard({
 
   return (
     <article
-      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-3xl border border-white/8 bg-slate-900/40 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--card-accent)]"
+      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-3xl glass border transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--card-accent)]"
       style={{ "--card-accent": accent } as CSSProperties}
     >
       <Link

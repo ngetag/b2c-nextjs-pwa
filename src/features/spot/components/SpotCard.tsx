@@ -36,7 +36,7 @@ export function SpotCard({
   return (
     <article
       className={cn(
-        "group flex flex-col overflow-hidden rounded-3xl border border-white/8 bg-slate-900/40 shadow-[0_8px_32px_rgba(0,0,0,0.3)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--card-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00F5FF]",
+        "group flex flex-col overflow-hidden rounded-3xl glass border transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--card-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00F5FF]",
         variant === "compact" ? "w-64 shrink-0" : "w-full",
         className,
       )}

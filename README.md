@@ -2,7 +2,9 @@
 
 Frontend MVP untuk Ngetag, platform discovery hangout spot dan event di Jakarta berbasis tag, lokasi, promo, rating, dan tren.
 
-> Status: **Phase 1–4 selesai**. Seluruh data dummy. Tanpa backend, tanpa auth.
+> Status: **Phase 5 selesai**. Data dummy + API internal Next.js, autentikasi (email/OAuth + JWT),
+> telemetri aktivitas asinkron + recommendation engine (pgvector), dokumentasi OpenAPI/Swagger,
+> dan dua tema (gelap + terang glassmorphism). Lihat [`docs/auth-telemetry-and-docs.md`](./docs/auth-telemetry-and-docs.md).
 
 ---
 
@@ -16,7 +18,10 @@ Frontend MVP untuk Ngetag, platform discovery hangout spot dan event di Jakarta 
 - Lucide React (ikon)
 - Zustand + persist (state global)
 - react-hook-form + zod (form)
-- next/font: Inter (body) + Plus Jakarta Sans (heading)
+- Font: `@fontsource-variable/inter` + `@fontsource-variable/plus-jakarta-sans` (self-hosted, tanpa request ke Google Fonts)
+- Auth: `jose` (JWT HS256), scrypt (Node crypto), OAuth 2.0 (Google/GitHub)
+- Data: `drizzle-orm` + `pg` (opsional — fallback in-memory), `zod` untuk validasi
+- Docs: `swagger-ui-dist` (Swagger UI di-host sendiri)
 - sonner (toast notification)
 
 > **Catatan penting**: Next.js 16 punya banyak breaking changes dari versi sebelumnya. Sebelum modifikasi atau penambahan API Next.js, baca docs lokal di `node_modules/next/dist/docs/` (lihat `AGENTS.md`).
@@ -45,6 +50,13 @@ Lint:
 npm run lint
 ```
 
+Regenerasi JSDoc `@openapi` di seluruh route handler:
+
+```bash
+npm run docs:jsdoc         # tulis ulang blok JSDoc
+npm run docs:jsdoc:check   # verifikasi (CI)
+```
+
 ---
 
 ## Halaman
@@ -57,6 +69,17 @@ npm run lint
 - `/bookmarks` — Spot dan event tersimpan (tabs)
 - `/profile` — Profil mock user + stats + reset data demo
 - `/reviews/new?spotId=...` — Tulis ulasan (rating + comment)
+
+### Phase 5 — auth, telemetri, docs, tema
+- `/auth/login` — masuk email/password + Google/GitHub (fallback demo)
+- `/auth/signup` — daftar + onboarding minat (cold start rekomendasi)
+- `/auth/callback` — menyelesaikan alur OAuth lalu lanjut ke `next`
+- `/account` — profil, inspeksi JWT claims, sesi aktif, taste vector, feed rekomendasi (dilindungi `proxy.ts`)
+- `/theme` — galeri tema Midnight Neon vs Lavender Glass
+- `/api-docs` — Swagger UI untuk 120 operasi API (`GET /api/openapi`)
+
+**Akun demo:** `demo@ngetag.id` / `ngetag123` (tersedia saat `AUTH_SEED_DEMO=true`).
+Salin `.env.example` → `.env.local` untuk mengatur `DATABASE_URL`, `AUTH_JWT_SECRET`, dan kredensial OAuth.
 
 ### P1 (polish)
 - `/profile/reviews` — Ulasan saya (edit/delete dummy)
