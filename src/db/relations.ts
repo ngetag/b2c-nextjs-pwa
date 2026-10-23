@@ -1,320 +1,263 @@
-import { relations } from "drizzle-orm";
-import {
-  communities,
-  communityAgendas,
-  communityCategories,
-  communityMemberships,
-  communityUpdates,
-  customerFavoriteTags,
-  customerInterests,
-  customers,
-  eventAttendances,
-  eventInterests,
-  events,
-  eventTags,
-  hypeItems,
-  interests,
-  ownerCommunities,
-  ownerEvents,
-  owners,
-  ownerSpots,
-  promos,
-  qrCodes,
-  reviews,
-  reviewSelectedTags,
-  reviewTags,
-  spotOpeningHours,
-  spots,
-  spotTags,
-  spotVisits,
-  tags,
-} from "./schema";
+import { defineRelations } from "drizzle-orm";
+import * as schema from "./schema";
 
-export const ownersRelations = relations(owners, ({ many }) => ({
-  spots: many(spots),
-  events: many(events),
-  communities: many(communities),
-  promos: many(promos),
-  qrCodes: many(qrCodes),
-  ownerSpots: many(ownerSpots),
-  ownerEvents: many(ownerEvents),
-  ownerCommunities: many(ownerCommunities),
-}));
+export const relations = defineRelations(schema, (r: { many: { spots: () => any; events: () => any; communities: () => any; promos: () => any; qrCodes: () => any; ownerSpots: () => any; ownerEvents: () => any; ownerCommunities: () => any; customerInterests: () => any; customerFavoriteTags: () => any; spotTags: () => any; eventTags: () => any; eventInterests: () => any; spotOpeningHours: () => any; reviews: () => any; reviewTags: () => any; spotVisits: () => any; eventAttendances: () => any; hypeItems: () => any; reviewSelectedTags: () => any; communityUpdates: () => any; communityAgendas: () => any; communityMemberships: () => any; }; one: { owners: (arg0: { from: any; to: any; }) => any; spots: (arg0: { from: any; to: any; }) => any; events: (arg0: { from: any; to: any; }) => any; communityCategories: (arg0: { from: any; to: any; }) => any; communities: (arg0: { from: any; to: any; }) => any; tags: (arg0: { from: any; to: any; }) => any; interests: (arg0: { from: any; to: any; }) => any; customers: (arg0: { from: any; to: any; }) => any; reviews: (arg0: { from: any; to: any; }) => any; reviewTags: (arg0: { from: any; to: any; }) => any; }; spots: { ownerId: any; id: any; }; owners: { id: any; }; spotOpeningHours: { spotId: any; }; events: { ownerId: any; id: any; }; promos: { ownerId: any; spotId: any; eventId: any; }; reviewTags: { spotId: any; id: any; }; reviews: { spotId: any; id: any; }; communities: { ownerId: any; categoryId: any; id: any; }; communityCategories: { id: any; }; communityUpdates: { communityId: any; }; communityAgendas: { communityId: any; }; qrCodes: { ownerId: any; }; hypeItems: { eventId: any; }; spotTags: { spotId: any; tagId: any; }; tags: { id: any; }; eventTags: { eventId: any; tagId: any; }; eventInterests: { eventId: any; interestId: any; }; interests: { id: any; }; customerInterests: { customerId: any; interestId: any; }; customers: { id: any; }; customerFavoriteTags: { customerId: any; tagId: any; }; ownerSpots: { ownerId: any; spotId: any; }; ownerEvents: { ownerId: any; eventId: any; }; ownerCommunities: { ownerId: any; communityId: any; }; reviewSelectedTags: { reviewId: any; reviewTagId: any; }; eventAttendances: { eventId: any; }; spotVisits: { spotId: any; }; communityMemberships: { communityId: any; }; }) => ({
+  owners: {
+    spots: r.many.spots(),
+    events: r.many.events(),
+    communities: r.many.communities(),
+    promos: r.many.promos(),
+    qrCodes: r.many.qrCodes(),
+    ownerSpots: r.many.ownerSpots(),
+    ownerEvents: r.many.ownerEvents(),
+    ownerCommunities: r.many.ownerCommunities(),
+  },
 
-export const customersRelations = relations(customers, ({ many }) => ({
-  customerInterests: many(customerInterests),
-  customerFavoriteTags: many(customerFavoriteTags),
-}));
+  customers: {
+    customerInterests: r.many.customerInterests(),
+    customerFavoriteTags: r.many.customerFavoriteTags(),
+  },
 
-export const tagsRelations = relations(tags, ({ many }) => ({
-  spotTags: many(spotTags),
-  eventTags: many(eventTags),
-  customerFavoriteTags: many(customerFavoriteTags),
-}));
+  tags: {
+    spotTags: r.many.spotTags(),
+    eventTags: r.many.eventTags(),
+    customerFavoriteTags: r.many.customerFavoriteTags(),
+  },
 
-export const interestsRelations = relations(interests, ({ many }) => ({
-  eventInterests: many(eventInterests),
-  customerInterests: many(customerInterests),
-}));
+  interests: {
+    eventInterests: r.many.eventInterests(),
+    customerInterests: r.many.customerInterests(),
+  },
 
-export const spotsRelations = relations(spots, ({ one, many }) => ({
-  owner: one(owners, {
-    fields: [spots.ownerId],
-    references: [owners.id],
-  }),
-  openingHours: many(spotOpeningHours),
-  spotTags: many(spotTags),
-  promos: many(promos),
-  reviews: many(reviews),
-  reviewTags: many(reviewTags),
-  visits: many(spotVisits),
-  ownerSpots: many(ownerSpots),
-}));
-
-export const spotOpeningHoursRelations = relations(
-  spotOpeningHours,
-  ({ one }) => ({
-    spot: one(spots, {
-      fields: [spotOpeningHours.spotId],
-      references: [spots.id],
+  spots: {
+    owner: r.one.owners({
+      from: r.spots.ownerId,
+      to: r.owners.id,
     }),
-  }),
-);
+    openingHours: r.many.spotOpeningHours(),
+    spotTags: r.many.spotTags(),
+    promos: r.many.promos(),
+    reviews: r.many.reviews(),
+    reviewTags: r.many.reviewTags(),
+    visits: r.many.spotVisits(),
+    ownerSpots: r.many.ownerSpots(),
+  },
 
-export const eventsRelations = relations(events, ({ one, many }) => ({
-  owner: one(owners, {
-    fields: [events.ownerId],
-    references: [owners.id],
-  }),
-  eventTags: many(eventTags),
-  eventInterests: many(eventInterests),
-  promos: many(promos),
-  attendances: many(eventAttendances),
-  hypeItems: many(hypeItems),
-  ownerEvents: many(ownerEvents),
-}));
-
-export const promosRelations = relations(promos, ({ one }) => ({
-  owner: one(owners, {
-    fields: [promos.ownerId],
-    references: [owners.id],
-  }),
-  spot: one(spots, {
-    fields: [promos.spotId],
-    references: [spots.id],
-  }),
-  event: one(events, {
-    fields: [promos.eventId],
-    references: [events.id],
-  }),
-}));
-
-export const reviewTagsRelations = relations(reviewTags, ({ one, many }) => ({
-  spot: one(spots, {
-    fields: [reviewTags.spotId],
-    references: [spots.id],
-  }),
-  reviewSelectedTags: many(reviewSelectedTags),
-}));
-
-export const reviewsRelations = relations(reviews, ({ one, many }) => ({
-  spot: one(spots, {
-    fields: [reviews.spotId],
-    references: [spots.id],
-  }),
-  selectedTags: many(reviewSelectedTags),
-}));
-
-export const communityCategoriesRelations = relations(
-  communityCategories,
-  ({ many }) => ({
-    communities: many(communities),
-  }),
-);
-
-export const communitiesRelations = relations(communities, ({ one, many }) => ({
-  owner: one(owners, {
-    fields: [communities.ownerId],
-    references: [owners.id],
-  }),
-  category: one(communityCategories, {
-    fields: [communities.categoryId],
-    references: [communityCategories.id],
-  }),
-  updates: many(communityUpdates),
-  agendas: many(communityAgendas),
-  memberships: many(communityMemberships),
-  ownerCommunities: many(ownerCommunities),
-}));
-
-export const communityUpdatesRelations = relations(
-  communityUpdates,
-  ({ one }) => ({
-    community: one(communities, {
-      fields: [communityUpdates.communityId],
-      references: [communities.id],
+  spotOpeningHours: {
+    spot: r.one.spots({
+      from: r.spotOpeningHours.spotId,
+      to: r.spots.id,
     }),
-  }),
-);
+  },
 
-export const communityAgendasRelations = relations(
-  communityAgendas,
-  ({ one }) => ({
-    community: one(communities, {
-      fields: [communityAgendas.communityId],
-      references: [communities.id],
+  events: {
+    owner: r.one.owners({
+      from: r.events.ownerId,
+      to: r.owners.id,
     }),
-  }),
-);
+    eventTags: r.many.eventTags(),
+    eventInterests: r.many.eventInterests(),
+    promos: r.many.promos(),
+    attendances: r.many.eventAttendances(),
+    hypeItems: r.many.hypeItems(),
+    ownerEvents: r.many.ownerEvents(),
+  },
 
-export const qrCodesRelations = relations(qrCodes, ({ one }) => ({
-  owner: one(owners, {
-    fields: [qrCodes.ownerId],
-    references: [owners.id],
-  }),
+  promos: {
+    owner: r.one.owners({
+      from: r.promos.ownerId,
+      to: r.owners.id,
+    }),
+    spot: r.one.spots({
+      from: r.promos.spotId,
+      to: r.spots.id,
+    }),
+    event: r.one.events({
+      from: r.promos.eventId,
+      to: r.events.id,
+    }),
+  },
+
+  reviewTags: {
+    spot: r.one.spots({
+      from: r.reviewTags.spotId,
+      to: r.spots.id,
+    }),
+    reviewSelectedTags: r.many.reviewSelectedTags(),
+  },
+
+  reviews: {
+    spot: r.one.spots({
+      from: r.reviews.spotId,
+      to: r.spots.id,
+    }),
+    selectedTags: r.many.reviewSelectedTags(),
+  },
+
+  communityCategories: {
+    communities: r.many.communities(),
+  },
+
+  communities: {
+    owner: r.one.owners({
+      from: r.communities.ownerId,
+      to: r.owners.id,
+    }),
+    category: r.one.communityCategories({
+      from: r.communities.categoryId,
+      to: r.communityCategories.id,
+    }),
+    updates: r.many.communityUpdates(),
+    agendas: r.many.communityAgendas(),
+    memberships: r.many.communityMemberships(),
+    ownerCommunities: r.many.ownerCommunities(),
+  },
+
+  communityUpdates: {
+    community: r.one.communities({
+      from: r.communityUpdates.communityId,
+      to: r.communities.id,
+    }),
+  },
+
+  communityAgendas: {
+    community: r.one.communities({
+      from: r.communityAgendas.communityId,
+      to: r.communities.id,
+    }),
+  },
+
+  qrCodes: {
+    owner: r.one.owners({
+      from: r.qrCodes.ownerId,
+      to: r.owners.id,
+    }),
+  },
+
+  hypeItems: {
+    event: r.one.events({
+      from: r.hypeItems.eventId,
+      to: r.events.id,
+    }),
+  },
+
+  spotTags: {
+    spot: r.one.spots({
+      from: r.spotTags.spotId,
+      to: r.spots.id,
+    }),
+    tag: r.one.tags({
+      from: r.spotTags.tagId,
+      to: r.tags.id,
+    }),
+  },
+
+  eventTags: {
+    event: r.one.events({
+      from: r.eventTags.eventId,
+      to: r.events.id,
+    }),
+    tag: r.one.tags({
+      from: r.eventTags.tagId,
+      to: r.tags.id,
+    }),
+  },
+
+  eventInterests: {
+    event: r.one.events({
+      from: r.eventInterests.eventId,
+      to: r.events.id,
+    }),
+    interest: r.one.interests({
+      from: r.eventInterests.interestId,
+      to: r.interests.id,
+    }),
+  },
+
+  customerInterests: {
+    customer: r.one.customers({
+      from: r.customerInterests.customerId,
+      to: r.customers.id,
+    }),
+    interest: r.one.interests({
+      from: r.customerInterests.interestId,
+      to: r.interests.id,
+    }),
+  },
+
+  customerFavoriteTags: {
+    customer: r.one.customers({
+      from: r.customerFavoriteTags.customerId,
+      to: r.customers.id,
+    }),
+    tag: r.one.tags({
+      from: r.customerFavoriteTags.tagId,
+      to: r.tags.id,
+    }),
+  },
+
+  ownerSpots: {
+    owner: r.one.owners({
+      from: r.ownerSpots.ownerId,
+      to: r.owners.id,
+    }),
+    spot: r.one.spots({
+      from: r.ownerSpots.spotId,
+      to: r.spots.id,
+    }),
+  },
+
+  ownerEvents: {
+    owner: r.one.owners({
+      from: r.ownerEvents.ownerId,
+      to: r.owners.id,
+    }),
+    event: r.one.events({
+      from: r.ownerEvents.eventId,
+      to: r.events.id,
+    }),
+  },
+
+  ownerCommunities: {
+    owner: r.one.owners({
+      from: r.ownerCommunities.ownerId,
+      to: r.owners.id,
+    }),
+    community: r.one.communities({
+      from: r.ownerCommunities.communityId,
+      to: r.communities.id,
+    }),
+  },
+
+  reviewSelectedTags: {
+    review: r.one.reviews({
+      from: r.reviewSelectedTags.reviewId,
+      to: r.reviews.id,
+    }),
+    reviewTag: r.one.reviewTags({
+      from: r.reviewSelectedTags.reviewTagId,
+      to: r.reviewTags.id,
+    }),
+  },
+
+  eventAttendances: {
+    event: r.one.events({
+      from: r.eventAttendances.eventId,
+      to: r.events.id,
+    }),
+  },
+
+  spotVisits: {
+    spot: r.one.spots({
+      from: r.spotVisits.spotId,
+      to: r.spots.id,
+    }),
+  },
+
+  communityMemberships: {
+    community: r.one.communities({
+      from: r.communityMemberships.communityId,
+      to: r.communities.id,
+    }),
+  },
 }));
-
-export const hypeItemsRelations = relations(hypeItems, ({ one }) => ({
-  event: one(events, {
-    fields: [hypeItems.eventId],
-    references: [events.id],
-  }),
-}));
-
-export const spotTagsRelations = relations(spotTags, ({ one }) => ({
-  spot: one(spots, {
-    fields: [spotTags.spotId],
-    references: [spots.id],
-  }),
-  tag: one(tags, {
-    fields: [spotTags.tagId],
-    references: [tags.id],
-  }),
-}));
-
-export const eventTagsRelations = relations(eventTags, ({ one }) => ({
-  event: one(events, {
-    fields: [eventTags.eventId],
-    references: [events.id],
-  }),
-  tag: one(tags, {
-    fields: [eventTags.tagId],
-    references: [tags.id],
-  }),
-}));
-
-export const eventInterestsRelations = relations(eventInterests, ({ one }) => ({
-  event: one(events, {
-    fields: [eventInterests.eventId],
-    references: [events.id],
-  }),
-  interest: one(interests, {
-    fields: [eventInterests.interestId],
-    references: [interests.id],
-  }),
-}));
-
-export const customerInterestsRelations = relations(
-  customerInterests,
-  ({ one }) => ({
-    customer: one(customers, {
-      fields: [customerInterests.customerId],
-      references: [customers.id],
-    }),
-    interest: one(interests, {
-      fields: [customerInterests.interestId],
-      references: [interests.id],
-    }),
-  }),
-);
-
-export const customerFavoriteTagsRelations = relations(
-  customerFavoriteTags,
-  ({ one }) => ({
-    customer: one(customers, {
-      fields: [customerFavoriteTags.customerId],
-      references: [customers.id],
-    }),
-    tag: one(tags, {
-      fields: [customerFavoriteTags.tagId],
-      references: [tags.id],
-    }),
-  }),
-);
-
-export const ownerSpotsRelations = relations(ownerSpots, ({ one }) => ({
-  owner: one(owners, {
-    fields: [ownerSpots.ownerId],
-    references: [owners.id],
-  }),
-  spot: one(spots, {
-    fields: [ownerSpots.spotId],
-    references: [spots.id],
-  }),
-}));
-
-export const ownerEventsRelations = relations(ownerEvents, ({ one }) => ({
-  owner: one(owners, {
-    fields: [ownerEvents.ownerId],
-    references: [owners.id],
-  }),
-  event: one(events, {
-    fields: [ownerEvents.eventId],
-    references: [events.id],
-  }),
-}));
-
-export const ownerCommunitiesRelations = relations(
-  ownerCommunities,
-  ({ one }) => ({
-    owner: one(owners, {
-      fields: [ownerCommunities.ownerId],
-      references: [owners.id],
-    }),
-    community: one(communities, {
-      fields: [ownerCommunities.communityId],
-      references: [communities.id],
-    }),
-  }),
-);
-
-export const reviewSelectedTagsRelations = relations(
-  reviewSelectedTags,
-  ({ one }) => ({
-    review: one(reviews, {
-      fields: [reviewSelectedTags.reviewId],
-      references: [reviews.id],
-    }),
-    reviewTag: one(reviewTags, {
-      fields: [reviewSelectedTags.reviewTagId],
-      references: [reviewTags.id],
-    }),
-  }),
-);
-
-export const eventAttendancesRelations = relations(
-  eventAttendances,
-  ({ one }) => ({
-    event: one(events, {
-      fields: [eventAttendances.eventId],
-      references: [events.id],
-    }),
-  }),
-);
-
-export const spotVisitsRelations = relations(spotVisits, ({ one }) => ({
-  spot: one(spots, {
-    fields: [spotVisits.spotId],
-    references: [spots.id],
-  }),
-}));
-
-export const communityMembershipsRelations = relations(
-  communityMemberships,
-  ({ one }) => ({
-    community: one(communities, {
-      fields: [communityMemberships.communityId],
-      references: [communities.id],
-    }),
-  }),
-);
