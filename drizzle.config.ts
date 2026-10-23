@@ -7,6 +7,7 @@ export default defineConfig({
   dialect: "postgresql",
   dbCredentials: {
     url:
+      process.env.DATABASE_URL ??
       "postgresql://ap_admin:ap_secret@localhost:5432/ngetag",
   },
   verbose: true,
