@@ -129,6 +129,18 @@ Semua data dummy ada di `src/data/fixtures/`:
 - 6 promos (`promos.ts`)
 - 1 mock user "Demo User" (`users.ts`)
 
+### Seed database user
+
+`src/db/seed/` berisi seed 16 customer dalam 8 varian (demo, review author `u1`–`u8`, admin, owner, power user, user baru, user lama/sparse, luar Jakarta) beserta relasi `customer_interests` dan `customer_favorite_tags`.
+
+```bash
+npm run db:push   # buat tabel & enum dari src/db/schema.ts
+npm run db:seed   # upsert 16 customer (idempoten)
+```
+
+Detail varian, invariant, dan catatan gap kontrak: `src/db/seed/README.md`.
+Presentasi review repository: `docs/presentasi/` (`.pptx` + outline).
+
 Repositories di `src/data/repositories/` membungkus fixtures dengan signature mirip API (async + simulate latency 200ms). **Ini adalah seam tunggal yang akan di-swap ke real fetch ketika backend siap.**
 
 ### Contoh swap ke real API (post-MVP)
