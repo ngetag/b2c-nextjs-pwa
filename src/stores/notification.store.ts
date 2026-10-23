@@ -16,7 +16,9 @@ interface NotificationState {
   items: NgetagNotification[];
   markAsRead: (id: string) => void;
   markAllAsRead: () => void;
-  addNotification: (notification: Omit<NgetagNotification, "id" | "unread" | "createdAt">) => void;
+  addNotification: (
+    notification: Omit<NgetagNotification, "id" | "unread" | "createdAt">,
+  ) => void;
 }
 
 const initialNotifications: NgetagNotification[] = [
@@ -43,7 +45,8 @@ const initialNotifications: NgetagNotification[] = [
   {
     id: "promoter-update",
     title: "Ada update dari promotor",
-    description: "Java Festival Production mengumumkan detail terbaru event.",
+    description:
+      "Java Festival Production mengumumkan detail terbaru event.",
     detail: "Kemarin · Java Festival Production",
     href: "/calendar?event=e1",
     type: "ticket",
@@ -56,17 +59,40 @@ export const useNotificationStore = create<NotificationState>()(
   persist(
     (set) => ({
       items: initialNotifications,
-      markAsRead: (id) =>
+      markAsRead: (id) => {
+        if (typeof window !== "undefined") {
+          void fetch("/api/notifications", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id }),
+          }).catch(() => null);
+        }
         set((state) => ({
           items: state.items.map((item) =>
-            item.id === id ? { ...item, unread: false } : item
+            item.id === id ? { ...item, unread: false } : item,
           ),
-        })),
-      markAllAsRead: () =>
+        }));
+      },
+      markAllAsRead: () => {
+        if (typeof window !== "undefined") {
+          void fetch("/api/notifications", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ markAllAsRead: true }),
+          }).catch(() => null);
+        }
         set((state) => ({
           items: state.items.map((item) => ({ ...item, unread: false })),
-        })),
-      addNotification: (notification) =>
+        }));
+      },
+      addNotification: (notification) => {
+        if (typeof window !== "undefined") {
+          void fetch("/api/notifications", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(notification),
+          }).catch(() => null);
+        }
         set((state) => ({
           items: [
             {
@@ -77,14 +103,17 @@ export const useNotificationStore = create<NotificationState>()(
             },
             ...state.items,
           ],
-        })),
+        }));
+      },
     }),
     {
       name: "ngetag-notifications",
-    }
-  )
+    },
+  ),
 );
 
 export const useUnreadNotificationCount = () => {
-  return useNotificationStore((state) => state.items.filter((item) => item.unread).length);
+  return useNotificationStore(
+    (state) => state.items.filter((item) => item.unread).length,
+  );
 };

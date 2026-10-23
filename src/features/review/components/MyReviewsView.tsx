@@ -8,6 +8,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { routes } from "@/config/routes";
+import { deleteReview } from "@/data/repositories/review.repo";
 import { ReviewTagChips } from "@/features/review/components/ReviewTagChips";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { formatRelative } from "@/lib/format";
@@ -63,6 +64,7 @@ export function MyReviewsView({ spots }: MyReviewsViewProps) {
 
   function handleDelete(id: string, spotName: string) {
     removeReview(id);
+    void deleteReview(id).catch(() => null);
     toast.success("Ulasan sudah dihapus", {
       description: `${spotName} sudah bersih dari daftar ulasanmu.`,
     });

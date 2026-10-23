@@ -1,109 +1,121 @@
-import { events } from "@/data/fixtures/events";
-import { tags } from "@/data/fixtures/tags";
-import { simulateLatency } from "@/data/repositories/_latency";
-import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
-import { sortByDistance } from "@/lib/location";
+import { apiFetch } from "@/lib/api-client";
+import { buildSearchParams } from "@/lib/url";
+import type { CreateEventInput, UpdateEventInput } from "@/schemas";
+import {
+  type EventSearchOptions,
+  storeCreateEvent,
+  storeDeleteEvent,
+  storeGetEventById,
+  storeListFeaturedEvents,
+  storeListRecommendedEventsByLocation,
+  storeSearchEvents,
+  storeUpdateEvent,
+} from "@/server/store";
+import type { EventContract } from "@/shared/contracts";
 import type { NgetagEvent } from "@/types/event";
+import type { Paginated } from "@/types/index";
 import type { Coordinates, WithDistance } from "@/types/location";
-import type { Paginated, SearchQuery } from "@/types/index";
 
 export type EventRecommendation = NgetagEvent & WithDistance;
 
-function tagSlugsToIds(slugs: string[]): string[] {
-  return tags.filter((t) => slugs.includes(t.slug)).map((t) => t.id);
-}
-
-function applyEventFilter(
-  items: NgetagEvent[],
-  query: SearchQuery,
-): NgetagEvent[] {
-  let result = items;
-  if (query.q) {
-    const q = query.q.toLowerCase();
-    result = result.filter(
-      (e) =>
-        e.title.toLowerCase().includes(q) ||
-        e.description.toLowerCase().includes(q) ||
-        e.venueName.toLowerCase().includes(q) ||
-        e.location.village.toLowerCase().includes(q) ||
-        e.location.district.toLowerCase().includes(q),
-    );
-  }
-  if (query.tagSlugs && query.tagSlugs.length > 0) {
-    const ids = tagSlugsToIds(query.tagSlugs);
-    if (ids.length > 0) {
-      result = result.filter((e) => ids.every((id) => e.tagIds.includes(id)));
-    }
-  }
-  if (query.city) {
-    result = result.filter(
-      (e) => e.location.city.toLowerCase() === query.city!.toLowerCase(),
-    );
-  }
-  return result;
-}
-
-function applyEventSort(
-  items: NgetagEvent[],
-  sort?: SearchQuery["sort"],
-): NgetagEvent[] {
-  const list = [...items];
-  switch (sort) {
-    case "newest":
-      list.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      );
-      break;
-    case "distance":
-    case "relevance":
-    default:
-      // upcoming first by start date
-      list.sort(
-        (a, b) =>
-          new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
-      );
-  }
-  return list;
-}
-
 export async function searchEvents(
-  query: SearchQuery = {},
+  query: EventSearchOptions = {},
 ): Promise<Paginated<NgetagEvent>> {
-  const page = query.page ?? 1;
-  const pageSize = query.pageSize ?? DEFAULT_PAGE_SIZE;
-  const filtered = applyEventFilter(events, query);
-  const sorted = applyEventSort(filtered, query.sort);
-  const start = (page - 1) * pageSize;
-  const items = sorted.slice(start, start + pageSize);
-  return simulateLatency({ items, page, pageSize, total: sorted.length });
+  const qs = buildSearchParams({
+    q: query.q,
+    tagSlugs: query.tagSlugs,
+    interestIds: query.interestIds,
+    city: query.city,
+    sort: query.sort,
+    page: query.page !== undefined ? String(query.page) : undefined,
+    pageSize: query.pageSize !== undefined ? String(query.pageSize) : undefined,
+    lat: query.lat !== undefined ? String(query.lat) : undefined,
+    lng: query.lng !== undefined ? String(query.lng) : undefined,
+    ownerId: query.ownerId,
+    publishStatus: query.publishStatus,
+    featured: query.featured !== undefined ? String(query.featured) : undefined,
+    anyTagMatch: query.anyTagMatch ? "true" : undefined,
+  });
+
+  return apiFetch<Paginated<NgetagEvent>>(`/api/events${qs}`, {
+    fallback: () => storeSearchEvents(query),
+  });
 }
 
-export async function getEventById(id: string): Promise<NgetagEvent | null> {
-  return simulateLatency(events.find((e) => e.id === id) ?? null);
+export async function getEventById(id: string): Promise<EventContract | null> {
+  return apiFetch<EventContract | null>(
+    `/api/events/${encodeURIComponent(id)}`,
+    {
+      fallback: () => storeGetEventById(id),
+    },
+  );
 }
 
 export async function listFeaturedEvents(limit = 8): Promise<NgetagEvent[]> {
-  const featured = events.filter((e) => e.featured);
-  const rest = events.filter((e) => !e.featured);
-  const ordered = [...featured, ...rest].sort(
-    (a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
-  );
-  return simulateLatency(ordered.slice(0, limit));
+  return apiFetch<NgetagEvent[]>(`/api/events?mode=featured&limit=${limit}`, {
+    fallback: () => storeListFeaturedEvents(limit),
+  });
 }
 
 export async function listRecommendedEventsByLocation(
   userLocation: Coordinates,
   limit = 8,
 ): Promise<EventRecommendation[]> {
-  return simulateLatency(sortByDistance(events, userLocation).slice(0, limit));
+  const qs = buildSearchParams({
+    mode: "recommended",
+    lat: String(userLocation.latitude),
+    lng: String(userLocation.longitude),
+    limit: String(limit),
+  });
+  return apiFetch<EventRecommendation[]>(`/api/events${qs}`, {
+    fallback: () => storeListRecommendedEventsByLocation(userLocation, limit),
+  });
 }
 
 export async function listEventsByTagSlug(
   slug: string,
   limit?: number,
 ): Promise<NgetagEvent[]> {
-  const ids = tagSlugsToIds([slug]);
-  const list = events.filter((e) => e.tagIds.some((id) => ids.includes(id)));
-  return simulateLatency(limit ? list.slice(0, limit) : list);
+  const pageSize = limit ?? 100;
+  const res = await searchEvents({
+    tagSlugs: [slug],
+    pageSize,
+    anyTagMatch: true,
+  });
+  return limit ? res.items.slice(0, limit) : res.items;
+}
+
+export async function createEvent(
+  input: CreateEventInput,
+): Promise<EventContract> {
+  return apiFetch<EventContract>("/api/events", {
+    method: "POST",
+    body: input,
+    fallback: () => storeCreateEvent(input),
+  });
+}
+
+export async function updateEvent(
+  id: string,
+  patch: UpdateEventInput,
+): Promise<EventContract | null> {
+  return apiFetch<EventContract | null>(
+    `/api/events/${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      body: patch,
+      fallback: () => storeUpdateEvent(id, patch),
+    },
+  );
+}
+
+export async function deleteEvent(id: string): Promise<boolean> {
+  const res = await apiFetch<{ deleted: boolean } | null>(
+    `/api/events/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+      fallback: () => ({ deleted: storeDeleteEvent(id) }),
+    },
+  );
+  return Boolean(res?.deleted);
 }

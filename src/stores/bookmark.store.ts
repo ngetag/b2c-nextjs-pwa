@@ -1,9 +1,9 @@
 "use client";
 
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { STORAGE_KEYS } from "@/lib/constants";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { demoUser } from "@/data/fixtures/users";
+import { STORAGE_KEYS } from "@/lib/constants";
 import {
   type Bookmark,
   type BookmarkTargetType,
@@ -41,12 +41,21 @@ export const useBookmarkStore = create<BookmarkState>()(
           return [buildBookmarkKey("event", targetId), bookmark];
         }),
       ),
-      isBookmarked: (type, id) => Boolean(get().items[buildBookmarkKey(type, id)]),
+      isBookmarked: (type, id) =>
+        Boolean(get().items[buildBookmarkKey(type, id)]),
       toggle: (type, targetId, userId) => {
         const key = buildBookmarkKey(type, targetId);
         const existing = get().items[key];
+        if (typeof window !== "undefined") {
+          void fetch("/api/engagements/bookmarks", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, targetType: type, targetId }),
+          }).catch(() => null);
+        }
         if (existing) {
-          const { [key]: _removed, ...rest } = get().items;
+          const rest = { ...get().items };
+          delete rest[key];
           set({ items: rest });
           return false;
         }
@@ -62,7 +71,8 @@ export const useBookmarkStore = create<BookmarkState>()(
       },
       remove: (type, targetId) => {
         const key = buildBookmarkKey(type, targetId);
-        const { [key]: _removed, ...rest } = get().items;
+        const rest = { ...get().items };
+        delete rest[key];
         set({ items: rest });
       },
       listByType: (type) =>

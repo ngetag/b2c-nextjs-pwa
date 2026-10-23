@@ -6,38 +6,46 @@ import type { CSSProperties } from "react";
 import { useMemo, useState } from "react";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/cn";
-import { communityCategories, communities } from "@/data/fixtures/interests";
+import { routes } from "@/config/routes";
+import {
+  communities as defaultCommunities,
+  communityCategories as defaultCommunityCategories,
+} from "@/data/fixtures/interests";
 import { CommunityCard } from "@/features/community/components/CommunityCard";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import {
-  getCommunitiesByCategoryId,
-  getCommunityCategoryById,
-} from "@/lib/interests";
+import { cn } from "@/lib/cn";
 import { getCommunityCategoryAccent } from "@/lib/discoveryAccent";
-import { routes } from "@/config/routes";
 import { useCommunityStore } from "@/stores/community.store";
+import type { Community, CommunityCategory } from "@/types/interest";
 
 interface CommunitiesViewProps {
   categoryId?: string;
   showJoinedOnly?: boolean;
+  initialCommunities?: Community[];
+  initialCategories?: CommunityCategory[];
 }
 
 export function CommunitiesView({
   categoryId,
   showJoinedOnly = false,
+  initialCommunities = defaultCommunities,
+  initialCategories = defaultCommunityCategories,
 }: CommunitiesViewProps) {
   const mounted = useIsMounted();
   const communityMemberships = useCommunityStore((state) => state.items);
   const joinedCommunityIds = new Set(Object.keys(communityMemberships));
   const joinedCommunities = mounted
-    ? communities.filter((community) => joinedCommunityIds.has(community.id))
+    ? initialCommunities.filter((community) =>
+        joinedCommunityIds.has(community.id),
+      )
     : [];
   const activeCategory = categoryId
-    ? getCommunityCategoryById(categoryId)
+    ? initialCategories.find((cat) => cat.id === categoryId)
     : undefined;
   const categoryCommunities = categoryId
-    ? getCommunitiesByCategoryId(categoryId)
+    ? initialCommunities.filter(
+        (community) => community.categoryId === categoryId,
+      )
     : [];
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const toggleTag = (tag: string) => {
@@ -47,7 +55,7 @@ export function CommunitiesView({
         : [...current, tag],
     );
   };
-  const filterByTags = (items: typeof communities) =>
+  const filterByTags = (items: Community[]) =>
     selectedTags.length === 0
       ? items
       : items.filter((community) =>
@@ -57,53 +65,54 @@ export function CommunitiesView({
     ? joinedCommunities
     : categoryId
       ? categoryCommunities
-      : communities;
+      : initialCommunities;
   const availableTags = useMemo(
-    () => Array.from(new Set(activeList.flatMap((community) => community.tags))),
+    () =>
+      Array.from(new Set(activeList.flatMap((community) => community.tags))),
     [activeList],
   );
   const filteredJoinedCommunities = filterByTags(joinedCommunities);
   const filteredCategoryCommunities = filterByTags(categoryCommunities);
 
-  const tagFilter = availableTags.length > 0 ? (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-3">
-        
-        {selectedTags.length > 0 ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-7 text-xs text-[var(--color-muted-foreground)]"
-            onClick={() => setSelectedTags([])}
-          >
-            Reset
-          </Button>
-        ) : null}
-      </div>
-      <div className="flex flex-wrap gap-1.5">
-        {availableTags.map((tag) => {
-          const active = selectedTags.includes(tag);
-          return (
-            <button
-              key={tag}
+  const tagFilter =
+    availableTags.length > 0 ? (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          {selectedTags.length > 0 ? (
+            <Button
               type="button"
-              onClick={() => toggleTag(tag)}
-              aria-pressed={active}
-              className={cn(
-                "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
-                active
-                  ? "border-[var(--color-primary)] bg-[var(--color-primary)]/15 text-[var(--color-primary)]"
-                  : "border-[var(--color-border)] bg-[var(--color-surface-soft)] text-[var(--color-foreground)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]",
-              )}
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs text-[var(--color-muted-foreground)]"
+              onClick={() => setSelectedTags([])}
             >
-              {tag}
-            </button>
-          );
-        })}
+              Reset
+            </Button>
+          ) : null}
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {availableTags.map((tag) => {
+            const active = selectedTags.includes(tag);
+            return (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => toggleTag(tag)}
+                aria-pressed={active}
+                className={cn(
+                  "rounded-full border px-2.5 py-1 text-xs font-medium transition-colors",
+                  active
+                    ? "border-[var(--color-primary)] bg-[var(--color-primary)]/15 text-[var(--color-primary)]"
+                    : "border-[var(--color-border)] bg-[var(--color-surface-soft)] text-[var(--color-foreground)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]",
+                )}
+              >
+                {tag}
+              </button>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  ) : null;
+    ) : null;
 
   if (showJoinedOnly) {
     return (
@@ -178,8 +187,10 @@ export function CommunitiesView({
         Kategori komunitas
       </h2>
       <div className="grid gap-3 pt-2 sm:grid-cols-2 lg:grid-cols-3">
-        {communityCategories.map((category) => {
-          const count = getCommunitiesByCategoryId(category.id).length;
+        {initialCategories.map((category) => {
+          const count = initialCommunities.filter(
+            (community) => community.categoryId === category.id,
+          ).length;
           const accent = getCommunityCategoryAccent(category);
           return (
             <Link

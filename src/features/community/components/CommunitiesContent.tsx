@@ -2,8 +2,17 @@
 
 import { useSearchParams } from "next/navigation";
 import { CommunitiesView } from "@/features/community/components/CommunitiesView";
+import type { Community, CommunityCategory } from "@/types/interest";
 
-export function CommunitiesContent() {
+interface CommunitiesContentProps {
+  initialCommunities?: Community[];
+  initialCategories?: CommunityCategory[];
+}
+
+export function CommunitiesContent({
+  initialCommunities,
+  initialCategories,
+}: CommunitiesContentProps) {
   const searchParams = useSearchParams();
   const showJoinedOnly = searchParams.get("filter") === "joined";
   const categoryId = searchParams.get("category") ?? undefined;
@@ -12,6 +21,8 @@ export function CommunitiesContent() {
     <CommunitiesView
       categoryId={categoryId}
       showJoinedOnly={showJoinedOnly}
+      initialCommunities={initialCommunities}
+      initialCategories={initialCategories}
     />
   );
 }

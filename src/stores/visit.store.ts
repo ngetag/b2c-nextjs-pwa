@@ -28,6 +28,14 @@ export const useVisitStore = create<VisitState>()(
         const now = new Date().toISOString();
         const current = get().items[id];
 
+        if (typeof window !== "undefined") {
+          void fetch("/api/engagements/visits", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, spotId, tagIds, reviewed }),
+          }).catch(() => null);
+        }
+
         set({
           items: {
             ...get().items,
