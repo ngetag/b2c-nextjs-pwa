@@ -1,0 +1,84 @@
+Value Proposition Canvas (VPC)
+v1.0: MVP Phase
+B2C (Business-to-Consumer): Kelompok Milenial dan Gen Z
+CUSTOMER PROFILE
+Customer Job(s): 
+Menemukan dan memutuskan destinasi hangout atau event yang paling relevan berdasarkan preferensi spesifik, jarak tempuh, ketersediaan waktu, serta penawaran promosi terbaik.
+Pains:
+Kekecewaan terhadap pengalaman berkunjung ke hangout spot atau event yang tidak sesuai ekspektasi akibat pengaruh informasi bias di media sosial.
+Proses pencarian merepotkan karena informasi terpencar di berbagai platform, serta kurang up-to-date akibat ketiadaan saluran informasi terpusat yang dikelola secara aktif oleh pemilik tempat atau event.
+Gains: 
+Memperoleh kepastian informasi operasional yang valid dari pihak pengelola, serta kemudahan mendapatkan rekomendasi terpercaya yang didasarkan pada ulasan objektif dari sesama penikmat.
+VALUE MAP
+Products & Services: 
+Ngetag Mobile App: 
+Platform direktori pencarian hangout spot serta event terpusat berbasis trending tags dan algoritma terpersonalisasi.
+Pain Relievers: 
+Menyajikan rekomendasi dinamis untuk mempermudah penikmat menemukan hangout spot atau event terdekat dengan promosi terbaik yang relevan dengan tren dan selera spesifik mereka.
+Gain Creators: 
+Mengimplementasikan mekanisme verifikasi kunjungan untuk memvalidasi objektivitas ulasan, sekaligus mengintegrasikan program customer benefit sebagai insentif atas kontribusi data yang diberikan.
+FIT ANALYSIS
+Uji
+Tantangan
+Jawaban
+Status
+Customer Job(s) ↔ Products & Services
+ dan Pain Relievers 
+Penikmat ingin "menemukan dan memutuskan" destinasi berdasarkan preferensi, jarak, waktu, dan atau promosi terbaik. 
+Menghadirkan platform direktori terpusat (Products & Services) yang menyajikan rekomendasi dinamis (Pain Relievers) agar mereka tidak perlu lagi mencari di berbagai media yang tersebar dan menghitung parameter tersebut secara manual. Algoritma Ngetag yang akan memprosesnya dan menyajikannya. 
+✅ FIT
+Pain 1 (Informasi Bias) ↔ Gain Creators 
+Penikmat kecewa dan takut zonk karena termakan ulasan bias/palsu di media sosial. 
+Mengimplementasikan mekanisme verifikasi kunjungan (Gain Creators). Orang tidak bisa sembarang memberi ulasan atau memvalidasi tag jika mereka tidak benar-benar datang ke lokasi. 
+✅ FIT
+Pain 2 (Data Terpencar dan Usang) ↔ Products & Services 
+Penikmat repot karena data terpencar di berbagai platform dan tidak dikelola secara aktif (usang). 
+Menyediakan direktori yang terpusat (Products & Services). (Catatan: Masalah "usang" sebagian besar akan dijawab secara tuntas di VPC B2B, karena di sanalah kita memberikan alat bagi pengelola untuk memperbarui data operasional mereka secara aktif. Namun dari sisi B2C, platform terpusat sudah menjawab kesulitan mereka mencari). 
+✅ FIT
+Gains ↔ Gain Creators dan Pain Relievers 
+Penikmat mengharapkan informasi tepercaya dari "sesama penikmat", serta mencari kepastian. 
+Ngetag memberikan program customer benefit (Gain Creators) sebagai pemicu (insentif) agar para penikmat terdorong untuk memberikan data berupa ulasan yang objektif. Data objektif inilah yang kemudian diolah menjadi rekomendasi dinamis (Pain Relievers) yang tepercaya. 
+✅ FIT
+
+
+B2B (Business-to-Business): Owner/Pengelola Hangout Spot serta Penyelenggara/Promotor Event
+CUSTOMER PROFILE
+Customer Job(s): 
+Menjangkau dan menarik pengunjung dari target pasar spesifik, serta mengelola informasi operasional dan reputasi bisnis.
+Pains:
+Miskomunikasi dan keluhan pelanggan akibat inkonsistensi update informasi operasional seperti jam buka dan ketersediaan lokasi yang tersebar di berbagai platform.
+Kerusakan reputasi akibat ulasan bias dari pihak yang bukan penikmat sebagai target pasar utama, serta inefisiensi biaya promosi akibat target pemasaran yang tidak tepat.
+Gains: 
+Memperoleh visibilitas pemasaran yang terarah langsung kepada audiens relevan, serta mendapatkan ulasan yang objektif dari pengunjung terverifikasi.
+VALUE MAP
+Products & Services: 
+Ngetag Business Dashboard: 
+Dasbor manajemen profil mandiri bagi pemilik tempat dan promotor untuk mengelola data operasional, promosi, dan atribut tag secara terpusat.
+Pain Relievers: 
+Menyediakan otoritas penuh bagi pengelola untuk memperbarui informasi operasional seperti lokasi, waktu, ketersediaan, dan promosi, dipadukan dengan algoritma penargetan berbasis tag yang membantu meminimalisir inefisiensi biaya promosi dengan memastikan profil bisnis mereka sampai kepada target pasar secara tepat.
+Gain Creators: 
+Melindungi reputasi bisnis dengan memberlakukan syarat verifikasi kunjungan bagi pengguna sebelum dapat memberikan ulasan, sehingga memastikan mitra hanya menerima umpan balik dan validasi tag yang objektif dari pengunjung yang valid.
+FIT ANALYSIS
+Uji
+Tantangan
+Jawaban
+Status
+Customer Job(s) ↔ Products & Services dan Pain Relievers 
+Penikmat ingin "menemukan dan memutuskan" destinasi berdasarkan preferensi, jarak, waktu, dan atau promosi terbaik. 
+Menghadirkan platform direktori terpusat (Products & Services) yang menyajikan rekomendasi dinamis (Pain Relievers) agar mereka tidak perlu lagi mencari di berbagai media yang tersebar dan menghitung parameter tersebut secara manual. Algoritma Ngetag yang akan memprosesnya dan menyajikannya. 
+✅ FIT
+Pain 1 (Informasi Bias) ↔ Gain Creators 
+Penikmat kecewa dan takut zonk karena termakan ulasan bias/palsu di media sosial. 
+Mengimplementasikan mekanisme verifikasi kunjungan (Gain Creators). Orang tidak bisa sembarang memberi ulasan atau memvalidasi tag jika mereka tidak benar-benar datang ke lokasi. 
+✅ FIT
+Pain 2 (Data Terpencar dan Usang) ↔ Products & Services 
+Penikmat repot karena data terpencar di berbagai platform dan tidak dikelola secara aktif (usang). 
+Menyediakan direktori yang terpusat (Products & Services). (Catatan: Masalah "usang" sebagian besar akan dijawab secara tuntas di VPC B2B, karena di sanalah kita memberikan alat bagi pengelola untuk memperbarui data operasional mereka secara aktif. Namun dari sisi B2C, platform terpusat sudah menjawab kesulitan mereka mencari). 
+✅ FIT
+Gains ↔ Gain Creators dan Pain Relievers 
+Penikmat mengharapkan informasi tepercaya dari "sesama penikmat", serta mencari kepastian. 
+Ngetag memberikan program customer benefit (Gain Creators) sebagai pemicu (insentif) agar para penikmat terdorong untuk memberikan data berupa ulasan yang objektif. Data objektif inilah yang kemudian diolah menjadi rekomendasi dinamis (Pain Relievers) yang tepercaya. 
+✅ FIT
+
+
+v2.0: Community Phase (soon)
