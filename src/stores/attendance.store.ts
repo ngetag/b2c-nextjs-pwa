@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { STORAGE_KEYS } from "@/lib/constants";
 import { buildAttendanceId, type EventAttendance } from "@/types/attendance";
 
@@ -21,6 +21,13 @@ export const useAttendanceStore = create<AttendanceState>()(
       isAttending: (eventId) => Boolean(get().items[eventId]),
       toggle: (eventId, userId) => {
         const existing = get().items[eventId];
+        if (typeof window !== "undefined") {
+          void fetch("/api/engagements/attendances", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId, eventId }),
+          }).catch(() => null);
+        }
         if (existing) {
           const rest = { ...get().items };
           delete rest[eventId];

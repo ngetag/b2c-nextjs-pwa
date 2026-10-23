@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import {
+  listCommunities,
+  listCommunityCategories,
+} from "@/data/repositories/community.repo";
 import { CommunitiesContent } from "@/features/community/components/CommunitiesContent";
 
 export const metadata: Metadata = {
@@ -7,7 +11,12 @@ export const metadata: Metadata = {
   description: "Temukan dan gabung komunitas berdasarkan minat kamu.",
 };
 
-export default function CommunitiesPage() {
+export default async function CommunitiesPage() {
+  const [communities, categories] = await Promise.all([
+    listCommunities(),
+    listCommunityCategories(),
+  ]);
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-10">
       <header className="space-y-2 pb-6">
@@ -32,7 +41,10 @@ export default function CommunitiesPage() {
           </div>
         }
       >
-        <CommunitiesContent />
+        <CommunitiesContent
+          initialCommunities={communities}
+          initialCategories={categories}
+        />
       </Suspense>
     </div>
   );

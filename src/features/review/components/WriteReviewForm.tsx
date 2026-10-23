@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { routes } from "@/config/routes";
+import { createReview } from "@/data/repositories/review.repo";
 import { QR_REVIEW_ACCESS_KEY } from "@/lib/constants";
 import { useCurrentUserStore } from "@/stores/currentUser.store";
 import { useReviewStore } from "@/stores/review.store";
@@ -69,8 +70,9 @@ export function WriteReviewForm({
   async function onSubmit(values: FormValues) {
     setSubmitting(true);
     const trimmedComment = values.comment.trim();
+    const reviewId = `r-user-${spotId}-${user.id}-${trimmedComment.length}`;
     const review: Review = {
-      id: `r-user-${spotId}-${user.id}-${trimmedComment.length}`,
+      id: reviewId,
       spotId,
       authorId: user.id,
       authorSnapshot: { name: user.name, avatarUrl: user.avatarUrl },
@@ -79,6 +81,22 @@ export function WriteReviewForm({
       helpfulCount: 0,
       createdAt: new Date().toISOString(),
     };
+
+    try {
+      await createReview({
+        id: review.id,
+        spotId: review.spotId,
+        authorId: review.authorId,
+        authorSnapshot: review.authorSnapshot,
+        comment: review.comment,
+        reviewTagIds: selectedReviewTagIds,
+        imageUrls: [],
+        helpfulCount: 0,
+      });
+    } catch {
+      // Fallback to local state if offline
+    }
+
     addReview(review);
     markSpotVisit({
       userId: user.id,

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getReviewTagsBySpotId } from "@/data/fixtures/review-tags";
+import { listReviewTagsBySpotId } from "@/data/repositories/review.repo";
 import { getSpotById } from "@/data/repositories/spot.repo";
 import { ReviewQrAccessGate } from "@/features/review/components/ReviewQrAccessGate";
 
@@ -33,7 +33,7 @@ export default async function WriteReviewPage({
 
   const spot = await getSpotById(spotId);
   if (!spot) notFound();
-  const reviewTags = getReviewTagsBySpotId(spot.id);
+  const reviewTags = await listReviewTagsBySpotId(spot.id);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6 md:px-6 md:py-10">

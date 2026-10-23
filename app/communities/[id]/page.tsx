@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getCommunityById } from "@/data/repositories/community.repo";
 import { CommunityDetailView } from "@/features/community/components/CommunityDetailView";
-import { getCommunityById } from "@/lib/interests";
 
 interface CommunityDetailPageProps {
   params: Promise<{ id: string }>;
@@ -11,7 +11,7 @@ export async function generateMetadata({
   params,
 }: CommunityDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const community = getCommunityById(id);
+  const community = await getCommunityById(id);
   if (!community) return { title: "Komunitas tidak ditemukan" };
 
   return {
@@ -29,7 +29,7 @@ export default async function CommunityDetailPage({
   params,
 }: CommunityDetailPageProps) {
   const { id } = await params;
-  const community = getCommunityById(id);
+  const community = await getCommunityById(id);
   if (!community) notFound();
 
   return (
