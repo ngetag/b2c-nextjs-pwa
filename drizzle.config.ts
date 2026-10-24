@@ -11,4 +11,5 @@ export default defineConfig({
       "postgresql://ap_admin:ap_secret@localhost:5432/ngetag",
   },
   verbose: true,
+  extensionsFilters: ['postgis'],
 });

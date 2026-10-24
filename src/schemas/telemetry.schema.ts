@@ -17,12 +17,14 @@ const isoDateTimeSchema = z
  * A single activity event accepted by `POST /api/telemetry/events`.
  *
  * The client SDK (`src/lib/telemetry/client.ts`) fills `anonymousId` and
- * `sessionId` automatically; `customerId` is always taken from the verified
- * JWT on the server, never from the request body.
+ * `sessionId` automatically. Client `customerId` aliases are accepted for
+ * compatibility but discarded; ownership always comes from the verified JWT.
  */
 export const telemetryEventSchema = z
   .strictObject({
     id: z.string().min(8).max(64).optional(),
+    customerId: z.string().max(64).optional(),
+    customer_id: z.string().max(64).optional(),
     anonymousId: z.string().min(8).max(64).optional(),
     sessionId: z.string().min(8).max(64).optional(),
     eventType: telemetryEventTypeSchema,
@@ -43,6 +45,12 @@ export const telemetryEventSchema = z
     longitude: z.number().min(-180).max(180).nullish(),
     source: telemetrySourceSchema.optional().default("web"),
     occurredAt: isoDateTimeSchema.optional(),
+  })
+  .transform((event) => {
+    const normalized = { ...event };
+    delete normalized.customerId;
+    delete normalized.customer_id;
+    return normalized;
   })
   .refine(
     (event) =>

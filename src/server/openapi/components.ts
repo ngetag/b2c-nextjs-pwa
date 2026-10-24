@@ -569,6 +569,16 @@ const telemetryEvent: Schema = {
   description: "Satu event aktivitas pengguna.",
   properties: {
     id: { type: "string", description: "Idempotency key (uuid)." },
+    customerId: {
+      type: "string",
+      maxLength: 64,
+      description: "Compatibility field; ignored. Customer identity comes from the JWT.",
+    },
+    customer_id: {
+      type: "string",
+      maxLength: 64,
+      description: "Compatibility field; ignored. Customer identity comes from the JWT.",
+    },
     anonymousId: { type: "string", description: "Device id untuk guest." },
     sessionId: string,
     eventType: {

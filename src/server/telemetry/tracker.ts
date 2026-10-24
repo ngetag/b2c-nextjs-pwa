@@ -69,7 +69,7 @@ function normalizeEvent(
   const normalized: StoredTelemetryEvent = {
     ...input,
     id: input.id ?? `tel_${randomUUID()}`,
-    customerId: context.customerId ?? input.customerId ?? null,
+    customerId: context.customerId ?? null,
     sessionId: input.sessionId ?? context.sessionId ?? undefined,
     tagIds: input.tagIds ?? [],
     interestIds: input.interestIds ?? [],

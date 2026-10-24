@@ -14,10 +14,14 @@ import "dotenv/config";
 import { inArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+import { interests as interestFixtures } from "@/data/fixtures/interests";
+import { tags as tagFixtures } from "@/data/fixtures/tags";
 import {
   customers,
   customerFavoriteTags,
   customerInterests,
+  interests,
+  tags,
 } from "@/db/schema";
 import {
   SEED_CUSTOMERS,
@@ -117,6 +121,30 @@ export function buildSeedSql(): string {
   lines.push("BEGIN;");
   lines.push("");
 
+  lines.push(
+    'INSERT INTO "interests" ("id", "label", "slug", "sort_order") VALUES',
+    interestFixtures
+      .map(
+        (interest, index) =>
+          `  (${sqlString(interest.id)}, ${sqlString(interest.label)}, ${sqlString(interest.slug)}, ${index})`,
+      )
+      .join(",\n"),
+    "ON CONFLICT (\"id\") DO NOTHING;",
+    "",
+  );
+
+  lines.push(
+    'INSERT INTO "tags" ("id", "slug", "name", "category", "icon_name", "trending_score") VALUES',
+    tagFixtures
+      .map(
+        (tag) =>
+          `  (${sqlString(tag.id)}, ${sqlString(tag.slug)}, ${sqlString(tag.name)}, ${sqlString(tag.category)}, ${sqlNullableString(tag.iconName)}, ${String(tag.trendingScore ?? 0)})`,
+      )
+      .join(",\n"),
+    "ON CONFLICT (\"id\") DO NOTHING;",
+    "",
+  );
+
   const customerValues = SEED_CUSTOMERS.map((customer) => {
     const columns = [
       sqlString(String(customer.id)),
@@ -196,6 +224,23 @@ async function seedWithDrizzle() {
 
   try {
     await db.transaction(async (tx) => {
+      await tx
+        .insert(interests)
+        .values(
+          interestFixtures.map((interest, index) => ({
+            id: interest.id,
+            label: interest.label,
+            slug: interest.slug,
+            sortOrder: index,
+          })),
+        )
+        .onConflictDoNothing();
+
+      await tx
+        .insert(tags)
+        .values(tagFixtures)
+        .onConflictDoNothing();
+
       if (reset) {
         await tx
           .delete(customerFavoriteTags)

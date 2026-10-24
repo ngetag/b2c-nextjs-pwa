@@ -52,6 +52,12 @@ import type { TelemetryEventInput } from "@/shared/telemetry";
  *                        type: string
  *                        minLength: 8
  *                        maxLength: 64
+ *                      customerId:
+ *                        type: string
+ *                        maxLength: 64
+ *                      customer_id:
+ *                        type: string
+ *                        maxLength: 64
  *                      anonymousId:
  *                        type: string
  *                        minLength: 8
