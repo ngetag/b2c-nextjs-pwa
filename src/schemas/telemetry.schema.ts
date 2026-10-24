@@ -23,8 +23,8 @@ const isoDateTimeSchema = z
 export const telemetryEventSchema = z
   .strictObject({
     id: z.string().min(8).max(64).optional(),
-    customerId: z.string().max(64).optional(),
-    customer_id: z.string().max(64).optional(),
+    customerId: z.string().max(64).nullish(),
+    customer_id: z.string().max(64).nullish(),
     anonymousId: z.string().min(8).max(64).optional(),
     sessionId: z.string().min(8).max(64).optional(),
     eventType: telemetryEventTypeSchema,
