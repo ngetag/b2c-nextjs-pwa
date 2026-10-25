@@ -242,6 +242,83 @@ Additional authentication tables (accounts, sessions, credentials/tokens) are de
 ## 4. Use-case sequence diagrams
 
 These diagrams cover the primary user journeys exposed by the UI and API. Request validation, auth checks, and persistence vary per endpoint; branches are illustrative and should be checked against current handlers before implementation.
+```mermaid
+sequenceDiagram
+  actor Visitor
+  actor Customer
+  actor Merchant
+  participant UI as ngeTag<br/>[Web PWA UI]
+  participant API as Next.js API
+  participant Auth as API[Auth]
+  participant Svc as API[Services]
+  participant Reco as API[Recomendation]
+  participant DBR as PG-DB[Content/Repository]
+  participant DBS as PG-DB[User/Session]
+
+  Visitor->>UI: Search, filter, choose location
+  UI->>API: GET /api/search or /api/spots, /events
+  API->>Svc: validate query and rank/filter
+  Svc->>DBR: read content, tags, interests, geo data
+  DBR-->>Svc: matching content
+  Svc-->>API: results
+  API-->>UI: JSON response
+  UI-->>Visitor: Results and detail links
+  rect rgb(191, 223, 255)
+  Visitor->>UI: Open article, community, or notifications
+  UI->>API: GET /api/blogs, /communities, /notifications
+  API->>Svc: validate and load requested resource
+  Svc->>DBR: read content and user state
+  DBR-->>UI: response data
+  opt Join, updates, agendas, or notification read state
+    Visitor->>UI: Change engagement/state
+    UI->>API: POST/PATCH relevant endpoint
+    API->>Svc: authorize and apply action
+    Svc->>DBR: save update
+    DBR-->>UI: updated state
+  end
+  opt Telemetry consent granted
+    UI->>API: POST /api/telemetry/events or /profile
+    API->>Svc: record/analyze activity
+    Svc->>DBR: persist event/profile or update recommendation index
+    DBR-->>API: accepted
+  end
+  end
+  Customer->>UI: Sign up or enter credentials
+  UI->>API: POST /api/auth/signup or /login
+  API->>Auth: validate and authenticate
+  Auth->>DBS: create/find user and session
+  DBS-->>Auth: account/session
+  Auth-->>API: tokens/cookie and profile
+  API-->>UI: success or validation/auth error
+  UI-->>Customer: Signed-in state
+  rect rgb(191, 223, 255)
+  Customer->>UI: View/update profile or sessions
+  UI->>API: GET/PATCH /api/users/me, /api/auth/profile or sessions
+  API->>Auth: authorize and apply change
+  Auth->>DBS: persist change
+  DBS-->>API: updated state
+  API->>Reco: get recomendation for profile
+  Reco-->>API: reco data
+  API-->>UI: profile and reco response
+  UI-->>Customer: Results and update reco
+  end
+  Merchant->>UI: Create or update spot/event/promo/community
+  UI->>API: POST/PATCH /api/{resource}
+  API->>Auth: validate request and owner permissions
+  Auth->>DBS: persist content and relationships
+  DBS-->>API: saved content
+  API-->>UI: result
+  UI-->>Merchant: result
+  rect rgb(191, 223, 255)
+  Merchant->>UI: Request analytics or dataset handoff
+  UI->>API: GET /api/b2b/analytics or /handoff
+  API->>Auth: authorize owner operation
+  Auth->>DBR: aggregate or snapshot domain data
+  DBR-->>UI: metrics / handoff payload
+  UI-->Merchant: result
+  end
+
+```
 
 ### Discover, search, and recommendations
 ```mermaid
